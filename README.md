@@ -63,8 +63,21 @@ In the following image we can check the Kubernetes Architecture:
 Let's take a look at the key concepts of Kubernetes
 
 1. Cluster: A set of node machines which are running the conternarized application (Worker Node) or the node controller (Master Node)
-2. Nodes: Physical or virtual machines with a certain hardware capacity which host one or multiple Pods and communicate with the Cluster.
-3. Master Node: Cluster Control Pane for managing Pods across the Worker Nodes. It contains the following components:
+2. Nodes: Physical or virtual machines with a certain hardware capacity which host one or multiple Pods + resources below:
+   
+   **Kubelet**
+   
+   Description: Kubelet is an agent that runs on each node and is responsible for making sure that the containers are running in a Pod.
+
+   **Kube Proxy**
+
+   Description: Kube Proxy is a network proxy that maintains network rules on nodes and helps with network communication to/from the pods.
+
+   **Container Runtime**
+
+   Description: The container runtime (e.g., Docker, containerd) is responsible for running containers in a pod.
+   
+4. Master Node: Cluster Control Pane for managing Pods across the Worker Nodes. It contains the following components:
    
    **API Server**
    
@@ -82,17 +95,8 @@ Let's take a look at the key concepts of Kubernetes
    
    Description: The Scheduler assigns work (pods) to worker nodes based on resource availability, policies, and other constraints.
    
-6. Worker Node: 
-7. PODs
-8. Containers
-9. Services
 
-Master Components
-A
-Node Components
-Kubelet
-Description: Kubelet is an agent that runs on each node and is responsible for making sure that the containers are running in a Pod.
-Kube Proxy
-Description: Kube Proxy is a network proxy that maintains network rules on nodes and helps with network communication to/from the pods.
-Container Runtime
-Description: The container runtime (e.g., Docker, containerd) is responsible for running containers in a pod.
+8. PODs
+9. Containers
+10. Services
+
