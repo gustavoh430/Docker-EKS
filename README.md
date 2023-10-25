@@ -151,3 +151,128 @@ Let's take a look at the key concepts of Kubernetes
 
 **10. Job and CronJobs:**
    Description: Creates one or more pods to perform a specific task or job and then ensures that the task completes successfully. Kubernetes jobs and cronjobs are Kubernetes objects      that are primarily meant for short-lived and batch workloads.
+
+
+
+## Resource definition setting up
+
+Java Resource Definition. Here, we are creating a deployment (login-deployment) with only one POD (login) from the image that were built up before and hosted at DockerHub. Furthermore, it has an environment variable (SPRING.DATASOURCE.URL) which contains the service host and port (mysql-service.default:3306) and other instructions.
+Then, we set up the Service component (login-service) pointing to 8080 port and externally available (type: LoadBalancer).
+
+```text
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: login-deployment
+spec:
+  replicas: 1
+  selector: 
+    matchLabels:
+      app: login
+  template:
+    metadata:
+      labels:
+        app: login
+    spec:
+      containers:
+        - name: login
+          image: gustavoh430/login_app
+          env:
+            - name: SPRING.DATASOURCE.URL
+              value: "jdbc:mysql://mysql-service.default:3306/UserDatabase?allowPublicKeyRetrieval=true&rewriteBatchedStatements=true&useSSL=false&useUnicode=yes&characterEncoding=UTF-8&useLegacyDatetimeCode=true&createDatabaseIfNotExist=true&useTimezone=true&serverTimezone=UTC"
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: login-service
+spec:
+  selector:
+    app: login
+  type: LoadBalancer
+  ports:
+    - protocol: TCP
+      port: 8080
+      targetPort: 8080
+```
+
+
+We also must create the MySQL components. We also create a Deployment (mysql) with one POD (mysql) from an image already available on Docker Hub (mysql:5.6). It has got two environment variables (MYSQL_ROOT_PASSWORD and MYSQL_ROOT_USERNAME), points to 3306 port and storages data into a volume (mysql-persistent-storage).
+
+
+
+```text
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mysql
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: mysql
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        app: mysql
+    spec:
+      containers:
+      - image: mysql:5.6
+        name: mysql
+        env:
+        - name: MYSQL_ROOT_PASSWORD
+          value: root
+        - name: MYSQL_ROOT_USERNAME
+          value: root
+        ports:
+        - containerPort: 3306
+          name: mysql
+        volumeMounts:
+        - name: mysql-persistent-storage
+          mountPath: /var/lib/mysql
+      volumes:
+      - name: mysql-persistent-storage
+        persistentVolumeClaim:
+          claimName: mysql-pv-claim
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: mysql-service
+spec:
+  ports:
+  - port: 3306
+  selector:
+    app: mysql
+  clusterIP: None
+---
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: mysql-pv-volume
+  labels:
+    type: local
+spec:
+  storageClassName: manual
+  capacity:
+    storage: 20Gi
+  accessModes:
+    - ReadWriteOnce
+  hostPath:
+    path: "/mnt/data"
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: mysql-pv-claim
+spec:
+  storageClassName: manual
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 20Gi
+
+```
