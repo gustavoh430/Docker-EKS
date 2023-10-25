@@ -304,12 +304,15 @@ aws eks --region us-west-1 update-kubeconfig --name EKS-Docker
    ![image](https://github.com/gustavoh430/Docker-EKS/assets/41215245/8a1619cc-dd4f-42e7-a6e3-46051090e9df)
 
 8. Create another IAM role. This time we will use EC2 and the following permissions:
+
         AmazonEKSWorkerNodePolicy
+
         AmazonEKS_CNI_Policy
+
         AmazonEC2ContainerRegistryReadOnly
 
 9. We apply our resource definition through "CloudShell".
-   In order to do that, we upload our yml file into CloudShell, then we just apply it using the code below
+   In order to do that, we upload our yml file to CloudShell, then we just apply it using the code below
 
 ```text
 kubectl apply -f Java.yml
