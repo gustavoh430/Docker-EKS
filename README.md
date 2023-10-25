@@ -276,3 +276,43 @@ spec:
       storage: 20Gi
 
 ```
+
+
+## Working with AWS
+
+1. Firstly, we will Create an EKS (Elastic Kubernetes Service) in us-west1 region.
+
+![image](https://github.com/gustavoh430/Docker-EKS/assets/41215245/d41f7769-1bd4-4225-a9e2-da9c80de855c)
+
+2. Give a name to your cluster (Name chosen: EKS-Docker)
+
+3. Then, create a Role as showed in "https://docs.aws.amazon.com/eks/latest/userguide/service_IAM_role.html#create-service-role".
+
+4. Choose the Role just created.
+
+5. Select the VPC and Security Group Available (or create it).
+
+6. Then, open the CloudShell and type:
+
+```text
+aws eks --region us-west-1 update-kubeconfig --name EKS-Docker
+```
+
+
+7. In "Compute" inside your EKS cluster, click on "Add Node Group"
+
+   ![image](https://github.com/gustavoh430/Docker-EKS/assets/41215245/8a1619cc-dd4f-42e7-a6e3-46051090e9df)
+
+8. Create another IAM role. This time we will use EC2 and the following permissions:
+        AmazonEKSWorkerNodePolicy
+        AmazonEKS_CNI_Policy
+        AmazonEC2ContainerRegistryReadOnly
+
+9. We apply our resource definition through "CloudShell".
+   In order to do that, we upload our yml file into CloudShell, then we just apply it using the code below
+
+```text
+kubectl apply -f Java.yml
+kubectl apply -f MySql.yml
+```
+
