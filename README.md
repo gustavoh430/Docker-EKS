@@ -280,7 +280,7 @@ spec:
 
 ## Working with AWS
 
-1. Firstly, we will Create an EKS (Elastic Kubernetes Service) in us-west1 region.
+1. Firstly, we will Create an EKS (Elastic Kubernetes Service) in us-east1 region.
 
 ![image](https://github.com/gustavoh430/Docker-EKS/assets/41215245/d41f7769-1bd4-4225-a9e2-da9c80de855c)
 
@@ -296,10 +296,7 @@ spec:
 
       ![image](https://github.com/gustavoh430/Docker-EKS/assets/41215245/cdd4dc48-e0ad-4bff-a45e-8a2f94467e9d)
 
-      Then, in the specification template, use the following url: "https://s3.us-west-2.amazonaws.com/amazon-eks/cloudformation/2020-10-29/amazon-eks-vpc-private-subnets.yaml"
-   
-      ![image](https://github.com/gustavoh430/Docker-EKS/assets/41215245/f54fbe98-06d7-4d49-806b-05fe67bffeac)
-      source: https://docs.aws.amazon.com/eks/latest/userguide/creating-a-vpc.html#create-vpc
+      Then, in the specification template, use the following url: "https://s3.us-west-2.amazonaws.com/amazon-eks/cloudformation/2020-10-29/amazon-eks-ipv6-vpc-public-private-         subnets.yaml"
 
       After this, click "Next" and give a name to your VPC
 
@@ -311,14 +308,7 @@ spec:
 
 8. Click on "Next" until we finally create the cluster.
 
-Then, open the CloudShell and type:
-
-```text
-aws eks --region us-west-1 update-kubeconfig --name EKS-Docker
-```
-
-
-7. In "Compute" inside your EKS cluster, click on "Add Node Group"
+9. In "Compute" inside your EKS cluster, click on "Add Node Group"
 
    ![image](https://github.com/gustavoh430/Docker-EKS/assets/41215245/8a1619cc-dd4f-42e7-a6e3-46051090e9df)
 
@@ -333,8 +323,8 @@ aws eks --region us-west-1 update-kubeconfig --name EKS-Docker
 9. We apply our resource definition through "CloudShell".
    In order to do that, we upload our yml file to CloudShell, then we just apply it using the code below
 
-```text
-kubectl apply -f Java.yml
-kubectl apply -f MySql.yml
-```
+   ```text
+   kubectl apply -f Java.yml
+   kubectl apply -f MySql.yml
+   ```
 
