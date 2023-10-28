@@ -290,9 +290,28 @@ spec:
 
 4. Choose the Role just created.
 
-5. Select the VPC and Security Group Available (or create it).
+5. Create a VPC using a template from CloudFormation.
 
-6. Then, open the CloudShell and type:
+      a. Create a Stack, clicking on:
+
+      ![image](https://github.com/gustavoh430/Docker-EKS/assets/41215245/cdd4dc48-e0ad-4bff-a45e-8a2f94467e9d)
+
+      Then, in the specification template, use the following url: "https://s3.us-west-2.amazonaws.com/amazon-eks/cloudformation/2020-10-29/amazon-eks-vpc-private-subnets.yaml"
+   
+      ![image](https://github.com/gustavoh430/Docker-EKS/assets/41215245/f54fbe98-06d7-4d49-806b-05fe67bffeac)
+      source: https://docs.aws.amazon.com/eks/latest/userguide/creating-a-vpc.html#create-vpc
+
+      After this, click "Next" and give a name to your VPC
+
+6 . Select the VPC you've created.
+
+7. Select "Public and Private" in Cluster Endpoint Access.
+
+   ![image](https://github.com/gustavoh430/Docker-EKS/assets/41215245/606ecfcd-6787-4ff3-9c5b-a4cf82e2a6e7)
+
+8. Click on "Next" until we finally create the cluster.
+
+Then, open the CloudShell and type:
 
 ```text
 aws eks --region us-west-1 update-kubeconfig --name EKS-Docker
