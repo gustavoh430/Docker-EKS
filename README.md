@@ -355,7 +355,11 @@ spec:
 ![image](https://github.com/gustavoh430/Docker-EKS/assets/41215245/2903ba2e-c9f6-410a-af52-824f630f56e3)
 
 
-20. Edit the MySQL.yml 
+20. Edit the MySQL.yml to add the EFS id to the "volumeHandle" in PersistentVolume compostion. Then, apply the new version to EKS.
+   
+
+![image](https://github.com/gustavoh430/Docker-EKS/assets/41215245/23f66093-94f2-478d-aee2-32cd2272dce9)
+
 
 
 18. Use the following command to install CSI driver in our environment:
