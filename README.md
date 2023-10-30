@@ -339,3 +339,30 @@ spec:
    kubectl apply -f MySql.yml
    ```
 
+15. Now we add a volume to persist our data even the pod gets restarted. We will achieve that through EFS and CSI volume type (check it out on "https://github.com/kubernetes-sigs/aws-efs-csi-driver").
+
+16. Create another Security Group. This time, we select the VPC we created before for our EKS cluster. This will ensure that our EKS will be accessible from this SG.
+
+17. Fill out "Inbound Rules" as follows:
+   Type: "NFS"
+   Source: "Custom"
+   CIDR Blocks: Our VPC IPV4 CIDR
+
+![image](https://github.com/gustavoh430/Docker-EKS/assets/41215245/fae14195-79ad-4c17-99c9-4246bfab8975)
+
+19. Create a Elastic File System (EFS) using the EKS VPC, through clicking on "Customize" (not Create). It is necessary because we are selecting the Security Group just created in the last step. 
+
+![image](https://github.com/gustavoh430/Docker-EKS/assets/41215245/2903ba2e-c9f6-410a-af52-824f630f56e3)
+
+
+20. Edit the MySQL.yml 
+
+
+18. Use the following command to install CSI driver in our environment:
+
+    ```text
+kubectl apply -k "github.com/kubernetes-sigs/aws-efs-csi-driver/deploy/kubernetes/overlays/stable/?ref=release-1.7"
+```
+    
+
+    
