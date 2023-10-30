@@ -284,7 +284,7 @@ spec:
 
 ![image](https://github.com/gustavoh430/Docker-EKS/assets/41215245/d41f7769-1bd4-4225-a9e2-da9c80de855c)
 
-2. Give a name to your cluster (Name chosen: EKS-Docker)
+2. Give a name to your cluster (Name chosen: LabDocker-EKs)
 
 3. Then, create a Role as showed in "https://docs.aws.amazon.com/eks/latest/userguide/service_IAM_role.html#create-service-role".
 
@@ -296,7 +296,7 @@ spec:
 
       ![image](https://github.com/gustavoh430/Docker-EKS/assets/41215245/cdd4dc48-e0ad-4bff-a45e-8a2f94467e9d)
 
-      Then, in the specification template, use the following url: "https://s3.us-west-2.amazonaws.com/amazon-eks/cloudformation/2020-10-29/amazon-eks-ipv6-vpc-public-private-         subnets.yaml"
+      Then, in the specification template, use the following url: "https://s3.us-west-2.amazonaws.com/amazon-eks/cloudformation/2020-10-29/amazon-eks-vpc-private-subnets.yaml"
 
       After this, click "Next" and give a name to your VPC
 
@@ -308,11 +308,17 @@ spec:
 
 8. Click on "Next" until we finally create the cluster.
 
-9. In "Compute" inside your EKS cluster, click on "Add Node Group"
+9. After this, open the CLI and use the following command to update your kubeconfig:
+
+   ```text
+      aws eks update-kubeconfig --name LabDocker-EKs
+      ```
+
+10. In "Compute" inside your EKS cluster, click on "Add Node Group"
 
    ![image](https://github.com/gustavoh430/Docker-EKS/assets/41215245/8a1619cc-dd4f-42e7-a6e3-46051090e9df)
 
-8. Create another IAM role. This time we will use EC2 and the following permissions:
+11. Create another IAM role. This time we will use EC2 and the following permissions:
 
         AmazonEKSWorkerNodePolicy
 
@@ -320,7 +326,12 @@ spec:
 
         AmazonEC2ContainerRegistryReadOnly
 
-9. We apply our resource definition through "CloudShell".
+12. Select only the private subnets and click "Next" until node creation.
+
+    ![image](https://github.com/gustavoh430/Docker-EKS/assets/41215245/d142d973-7ade-4b00-9653-a8d2a803bb2f)
+
+
+14. After creating the Node Group, we apply our resource definition through "CloudShell".
    In order to do that, we upload our yml file to CloudShell, then we just apply it using the code below
 
    ```text
