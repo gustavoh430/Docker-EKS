@@ -8,7 +8,7 @@ Project using docker to build up an image and EKS to run it publicly
 
 ## What is it for?
 We are going build an image from a java application already created and available on "https://github.com/gustavoh430/loginproject". Moreover, it will be necessary to fetch MySQL image from Docker Hub.
-Basically, we are going to host them in EKS and make them communicate with each other.
+Basically, we are going to host them on EKS and make them communicate with each other.
 
 
 
