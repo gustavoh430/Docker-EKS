@@ -43,12 +43,6 @@ Obs. The image and repository name, which has just been created, has to be exact
 docker build -t gustavoh430/login_app .
 ```
 
-Soon after this, it becomes avaible from Docker Hub
-
-```text
-docker images
-```
-
 ![image](https://github.com/gustavoh430/Docker-EKS/assets/41215245/ecc190db-8750-47b2-8e07-eb51c5c20153)
 
 ## Pushing it into Docker Hub
@@ -58,6 +52,9 @@ Use the following command:
 ```text
 docker push gustavoh430/login_app
 ```
+
+Soon after this, it becomes available from Docker Hub
+
 
 ![image](https://github.com/gustavoh430/Docker-EKS/assets/41215245/231cab95-2041-4868-8c20-c13830c1b6a5)
 
