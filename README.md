@@ -207,7 +207,6 @@ kind: Deployment
 metadata:
   name: mysql
 spec:
-  replicas: 1
   selector:
     matchLabels:
       app: mysql
@@ -230,12 +229,51 @@ spec:
         - containerPort: 3306
           name: mysql
         volumeMounts:
-        - name: mysql-persistent-storage
-          mountPath: /var/lib/mysql
+        - name: efs-vol
+          mountPath: /app/users
       volumes:
-      - name: mysql-persistent-storage
+      - name: efs-vol
         persistentVolumeClaim:
-          claimName: mysql-pv-claim
+          claimName: efs-pvc
+---
+kind: StorageClass
+apiVersion: storage.k8s.io/v1
+metadata:
+  name: efs-sc
+provisioner: efs.csi.aws.com
+mountOptions:
+  - iam
+parameters:
+  provisioningMode: efs-ap
+  fileSystemId: fs-03db8f74bf9706627
+  directoryPerms: "700"
+---
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: efs-pv
+spec:
+  storageClassName: efs-sc
+  capacity:
+    storage: 5Gi
+  volumeMode: Filesystem
+  accessModes:
+    - ReadWriteMany
+  csi:
+    driver: efs.csi.aws.com
+    volumeHandle: fs-03db8f74bf9706627
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: efs-pvc
+spec:
+  storageClassName: efs-sc
+  accessModes:
+    - ReadWriteMany
+  resources:
+    requests:
+      storage: 5Gi
 ---
 apiVersion: v1
 kind: Service
@@ -247,33 +285,6 @@ spec:
   selector:
     app: mysql
   clusterIP: None
----
-apiVersion: v1
-kind: PersistentVolume
-metadata:
-  name: mysql-pv-volume
-  labels:
-    type: local
-spec:
-  storageClassName: manual
-  capacity:
-    storage: 20Gi
-  accessModes:
-    - ReadWriteOnce
-  hostPath:
-    path: "/mnt/data"
----
-apiVersion: v1
-kind: PersistentVolumeClaim
-metadata:
-  name: mysql-pv-claim
-spec:
-  storageClassName: manual
-  accessModes:
-    - ReadWriteOnce
-  resources:
-    requests:
-      storage: 20Gi
 
 ```
 
@@ -284,7 +295,7 @@ spec:
 
 ![image](https://github.com/gustavoh430/Docker-EKS/assets/41215245/d41f7769-1bd4-4225-a9e2-da9c80de855c)
 
-2. Give a name to your cluster (Name chosen: LabDocker-EKs)
+2. Give a name to your cluster (Name chosen: EKsCluster)
 
 3. Then, create a Role as showed in "https://docs.aws.amazon.com/eks/latest/userguide/service_IAM_role.html#create-service-role".
 
@@ -311,7 +322,7 @@ spec:
 9. After this, open the CLI and use the following command to update your kubeconfig:
 
    ```text
-      aws eks update-kubeconfig --name LabDocker-EKs
+      aws eks update-kubeconfig --name EKsCluster
       ```
 
 10. In "Compute" inside your EKS cluster, click on "Add Node Group"
@@ -331,31 +342,23 @@ spec:
     ![image](https://github.com/gustavoh430/Docker-EKS/assets/41215245/d142d973-7ade-4b00-9653-a8d2a803bb2f)
 
 
-14. After creating the Node Group, we apply our resource definition through "CloudShell".
-   In order to do that, we upload our yml file to CloudShell, then we just apply it using the code below
+13. Now we add a volume to persist our data even if the pod gets restarted. We will achieve that through EFS and CSI volume type (check it out on "https://github.com/kubernetes-sigs/aws-efs-csi-driver").
 
-   ```text
-   kubectl apply -f Java.yml
-   kubectl apply -f MySql.yml
-   ```
+14. Create another Security Group. This time, we select the VPC we created before for our EKS cluster. This will ensure that our EKS will be accessible from this SG.
 
-15. Now we add a volume to persist our data even if the pod gets restarted. We will achieve that through EFS and CSI volume type (check it out on "https://github.com/kubernetes-sigs/aws-efs-csi-driver").
-
-16. Create another Security Group. This time, we select the VPC we created before for our EKS cluster. This will ensure that our EKS will be accessible from this SG.
-
-17. Fill out "Inbound Rules" as follows:
+15. Fill out "Inbound Rules" as follows:
    Type: "NFS"
    Source: "Custom"
    CIDR Blocks: Our VPC IPV4 CIDR
 
 ![image](https://github.com/gustavoh430/Docker-EKS/assets/41215245/fae14195-79ad-4c17-99c9-4246bfab8975)
 
-19. Create a Elastic File System (EFS) using the EKS VPC, through clicking on "Customize" (not Create). It is necessary because we are selecting the Security Group just created in the last step. 
+16. Create a Elastic File System (EFS) using the EKS VPC, through clicking on "Customize" (not Create). It is necessary because we are selecting the Security Group just created in the last step. 
 
 ![image](https://github.com/gustavoh430/Docker-EKS/assets/41215245/2903ba2e-c9f6-410a-af52-824f630f56e3)
 
 
-20. Edit the MySQL.yml to add the EFS id to the "volumeHandle" in PersistentVolume compostion. Then, apply the new version to EKS.
+17. Edit the MySQL.yml to add the EFS id to the "volumeHandle" in PersistentVolume compostion. Then, apply the new version to EKS.
    
 
 ![image](https://github.com/gustavoh430/Docker-EKS/assets/41215245/23f66093-94f2-478d-aee2-32cd2272dce9)
@@ -367,6 +370,36 @@ spec:
     ```text
 kubectl apply -k "github.com/kubernetes-sigs/aws-efs-csi-driver/deploy/kubernetes/overlays/stable/?ref=release-1.7"
 ```
-    
 
-    
+19. After this, we apply our resource definition through "CloudShell" or CLI.
+   In order to do that, we upload our yml file to CloudShell, then we just apply it using the code below
+
+   ```text
+   kubectl apply -f Java.yml
+   kubectl apply -f MySql.yml
+   ```
+
+20. Once all these steps were followed properly, we must get a working application on cloud. In order to make calls and test if it is working, we use the code below which will list our external IP.
+
+```text
+   kubectl get services
+   ```
+
+![image](https://github.com/gustavoh430/Docker-EKS/assets/41215245/06d95cc4-25bc-424d-b9f7-41f5ef4a4eb1)
+
+
+With that, we can call the login-service, which is the only one that is exposed on the internet (the other is only accessible through the cluster).
+
+21. Use Postman to test our application:
+      
+      Sign up (/login/signup)
+
+    ![image](https://github.com/gustavoh430/Docker-EKS/assets/41215245/8c27de38-3cd4-4ea7-b6b1-92ba82924319)
+
+      Login in (/login/signin)
+
+   ![image](https://github.com/gustavoh430/Docker-EKS/assets/41215245/2601cddb-be63-4e72-8146-207d99a8484a)
+
+      Gets user's information
+      
+   ![image](https://github.com/gustavoh430/Docker-EKS/assets/41215245/b6302eb9-1ca9-4d27-a8b3-17b50d1927dc)
