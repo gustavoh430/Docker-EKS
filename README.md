@@ -17,7 +17,7 @@ Basically, we are going to host them in EKS and make them communicate with each 
 
 Dockerfile has been set up as follows:
 
-```text
+```json
 FROM maven:3.8.5-openjdk-17-slim as build
 COPY /src /app/src
 COPY /pom.xml /app
@@ -51,6 +51,16 @@ docker images
 
 ![image](https://github.com/gustavoh430/Docker-EKS/assets/41215245/ecc190db-8750-47b2-8e07-eb51c5c20153)
 
+## Pushing it into Docker Hub
+
+Use the following command:
+
+```text
+docker push gustavoh430/login_app
+```
+
+![image](https://github.com/gustavoh430/Docker-EKS/assets/41215245/231cab95-2041-4868-8c20-c13830c1b6a5)
+
 
 ## How Kubernetes works
 
@@ -63,6 +73,7 @@ In the following image we can check the Kubernetes Architecture:
 Let's take a look at the key concepts of Kubernetes
 
 **1. Cluster:** A set of node machines which are running the conternarized application (Worker Node) or the node controller (Master Node)
+
 **2. Nodes:** Physical or virtual machines with a certain hardware capacity which host one or multiple Pods + resources below:
    
    **Kubelet**
@@ -89,7 +100,7 @@ Let's take a look at the key concepts of Kubernetes
    
    **Controller Manager**
    
-   Description: The Controller Manager manages controller processes responsible for maintaining the desired state of the cluster. It includes controllers for nodes, replication,           endpoints, and more. It is a loop that continually monitors your cluster and performs actions when certain events occur, like creating a pod when a new deployment is deployed.
+   Description: The Controller Manager manages controller processes responsible for maintaining the desired state of the cluster. It includes controllers for nodes, replication,          endpoints, and more. It is a loop that continually monitors your cluster and performs actions when certain events occur, like creating a pod when a new deployment is deployed.
    
    **Scheduler**
    
@@ -159,7 +170,7 @@ Let's take a look at the key concepts of Kubernetes
 Java Resource Definition. Here, we are creating a deployment (login-deployment) with only one POD (login) from the image that were built up before and hosted at DockerHub. Furthermore, it has an environment variable (SPRING.DATASOURCE.URL) which contains the service host and port (mysql-service.default:3306) and other instructions.
 Then, we set up the Service component (login-service) pointing to 8080 port and externally available (type: LoadBalancer).
 
-```text
+```json
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -197,11 +208,11 @@ spec:
 ```
 
 
-We also must create the MySQL components. We also create a Deployment (mysql) with one POD (mysql) from an image already available on Docker Hub (mysql:5.6). It has got two environment variables (MYSQL_ROOT_PASSWORD and MYSQL_ROOT_USERNAME), points to 3306 port and storages data into a volume (mysql-persistent-storage).
+We also must create the MySQL components. We also create a Deployment (mysql) with one POD (mysql) from an image already available on Docker Hub (mysql:5.6). It has got two environment variables (MYSQL_ROOT_PASSWORD and MYSQL_ROOT_USERNAME), points to 3306 port and storages data into a CSI volume type. We must have a Persistent Volume (PV) which represents the volume itself. Then, it is also necessary to create a Persistent Volume Claim, to attach our pod to the PV. Finally, to make this a dynamical communication, we create a StorageClass, so that we do not need to create a PV for every POD.
 
 
 
-```text
+```json
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -403,3 +414,15 @@ With that, we can call the login-service, which is the only one that is exposed 
       Gets user's information
       
    ![image](https://github.com/gustavoh430/Docker-EKS/assets/41215245/b6302eb9-1ca9-4d27-a8b3-17b50d1927dc)
+
+
+# Author
+
+Hi, I'm Gustavo!
+
+I have been working as an SRE & Observability Analyst for two years already. As most of SREs, I work analyzing infraestructure and services in a massive Cloud based ecosystem, using traces, logs and metrics.
+
+Contacts:
+Email: gustavoh430@gmail.com
+
+Linkedin: https://www.linkedin.com/in/gustavohgodinho/
