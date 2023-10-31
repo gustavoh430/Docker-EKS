@@ -375,9 +375,9 @@ spec:
 
 18. Use the following command to install CSI driver in our environment:
 
-    ```text
-kubectl apply -k "github.com/kubernetes-sigs/aws-efs-csi-driver/deploy/kubernetes/overlays/stable/?ref=release-1.7"
-```
+   ```text
+   kubectl apply -k "github.com/kubernetes-sigs/aws-efs-csi-driver/deploy/kubernetes/overlays/stable/?ref=release-1.7"
+   ```
 
 19. After this, we apply our resource definition through "CloudShell" or CLI.
    In order to do that, we upload our yml file to CloudShell, then we just apply it using the code below
@@ -408,7 +408,7 @@ With that, we can call the login-service, which is the only one that is exposed 
 
    ![image](https://github.com/gustavoh430/Docker-EKS/assets/41215245/2601cddb-be63-4e72-8146-207d99a8484a)
 
-      Gets user's information
+      Gets user's information (/login/{email})
       
    ![image](https://github.com/gustavoh430/Docker-EKS/assets/41215245/b6302eb9-1ca9-4d27-a8b3-17b50d1927dc)
 
