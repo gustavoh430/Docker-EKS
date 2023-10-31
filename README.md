@@ -17,7 +17,7 @@ Basically, we are going to host them in EKS and make them communicate with each 
 
 Dockerfile has been set up as follows:
 
-```json
+```text
 FROM maven:3.8.5-openjdk-17-slim as build
 COPY /src /app/src
 COPY /pom.xml /app
@@ -170,7 +170,7 @@ Let's take a look at the key concepts of Kubernetes
 Java Resource Definition. Here, we are creating a deployment (login-deployment) with only one POD (login) from the image that were built up before and hosted at DockerHub. Furthermore, it has an environment variable (SPRING.DATASOURCE.URL) which contains the service host and port (mysql-service.default:3306) and other instructions.
 Then, we set up the Service component (login-service) pointing to 8080 port and externally available (type: LoadBalancer).
 
-```json
+```text
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -212,7 +212,7 @@ We also must create the MySQL components. We also create a Deployment (mysql) wi
 
 
 
-```json
+```text
 apiVersion: apps/v1
 kind: Deployment
 metadata:
