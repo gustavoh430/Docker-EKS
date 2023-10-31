@@ -43,7 +43,7 @@ Obs. The image and repository name, which has just been created, has to be exact
 docker build -t gustavoh430/login_app .
 ```
 
-Soon after this, it becomes avaible from
+Soon after this, it becomes avaible from Docker Hub
 
 ```text
 docker images
