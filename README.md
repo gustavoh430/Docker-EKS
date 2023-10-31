@@ -361,7 +361,7 @@ spec:
 
 ![image](https://github.com/gustavoh430/Docker-EKS/assets/41215245/fae14195-79ad-4c17-99c9-4246bfab8975)
 
-16. Create a Elastic File System (EFS) using the EKS VPC, through clicking on "Customize" (not Create). It is necessary because we are selecting the Security Group just created in the last step. 
+16. Create an Elastic File System (EFS) using the EKS VPC, through clicking on "Customize" (not Create). It is necessary because we are selecting the Security Group just created in the last step. 
 
 ![image](https://github.com/gustavoh430/Docker-EKS/assets/41215245/2903ba2e-c9f6-410a-af52-824f630f56e3)
 
