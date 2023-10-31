@@ -339,7 +339,7 @@ spec:
    kubectl apply -f MySql.yml
    ```
 
-15. Now we add a volume to persist our data even the pod gets restarted. We will achieve that through EFS and CSI volume type (check it out on "https://github.com/kubernetes-sigs/aws-efs-csi-driver").
+15. Now we add a volume to persist our data even if the pod gets restarted. We will achieve that through EFS and CSI volume type (check it out on "https://github.com/kubernetes-sigs/aws-efs-csi-driver").
 
 16. Create another Security Group. This time, we select the VPC we created before for our EKS cluster. This will ensure that our EKS will be accessible from this SG.
 
